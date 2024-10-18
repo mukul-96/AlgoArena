@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useNavigate, useParams } from 'react-router-dom';
+import { BACKEND_URL } from '../config';
 
-const socket = io('http://localhost:3000');
+const socket = io(BACKEND_URL);
 
 export default function Landing() {
     const { userName } = useParams();
@@ -19,7 +20,7 @@ export default function Landing() {
 
         const fetchFriends = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/user/friends-list/${userName}`);
+                const response = await fetch(`${BACKEND_URL}/user/friends-list/${userName}`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 setFriends(data.friends);

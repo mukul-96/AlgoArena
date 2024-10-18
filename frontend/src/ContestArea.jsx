@@ -1,10 +1,10 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import { io } from 'socket.io-client';
+import { BACKEND_URL } from './config';
 
-const socket = io('http://localhost:3000');
+const socket = io(BACKEND_URL);
 
 export default function ContestArea() {
     const languageId = {
@@ -27,7 +27,7 @@ export default function ContestArea() {
     useEffect(() => {
         const fetchQuestion = async () => {
             try {
-                const response = await fetch('http://localhost:3000/user/random-problem');
+                const response = await fetch(`${BACKEND_URL}/user/random-problem`);
                 const data = await response.json();
                 setQuestion(data);
             } catch (error) {
@@ -66,17 +66,15 @@ export default function ContestArea() {
         socket.emit('joinRoom', { roomID, userName });
         return () => {
             socket.emit('leaveRoom', { roomID });
-        };  
+        };
     }, [roomID, userName]);
 
-    
     useEffect(() => {
         socket.on('contestResult', ({ winner, loser }) => {
-            console.log(`Contest result received: Winner - ${winner}, Loser - ${loser}`);
             if (userName === winner) {
                 setWon(true);
             } else if (userName === loser) {
-                setLost(true);  
+                setLost(true);
             }
         });
 
@@ -99,7 +97,7 @@ export default function ContestArea() {
             userName,
         };
 
-        fetch('http://localhost:3000/user/submit', {
+        fetch(`${BACKEND_URL}/user/submit`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -108,12 +106,9 @@ export default function ContestArea() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log('Submission response:', data);
                 if (data.status === 'Accepted') {
                     socket.emit('contestResult', { roomID, winner: userName });
-                    console.log('Contest result emitted: Winner');
                 } else {
-                    console.error('Submission error:', data.message);
                     alert(data.message);
                 }
             })
@@ -124,7 +119,6 @@ export default function ContestArea() {
     };
 
     const handleCloseMessage = () => {
-        console.log('Closing message and resetting states.');
         setWon(false);
         setLost(false);
         localStorage.removeItem('contestStartTime');
