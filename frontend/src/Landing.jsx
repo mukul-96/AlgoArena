@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BACKEND_URL } from '../config';
+import { BACKEND_URL } from '..config/';
 
 const socket = io(BACKEND_URL);
 

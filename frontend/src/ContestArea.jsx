@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import { io } from 'socket.io-client';
-import { BACKEND_URL } from './config';
+import { BACKEND_URL } from '../config';
 
 const socket = io(BACKEND_URL);
 
