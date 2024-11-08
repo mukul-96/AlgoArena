@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
         });
         await newUser.save();
 
-        const token = jwt.sign({ id: newUser._id }, JWT_SECRET);
+        const token = jwt.sign({ id: newUser._id,username:newUser.username }, JWT_SECRET);
 
         res.json({ token, user: { id: newUser._id, username: newUser.username, email: newUser.email, rank: newUser.rank } });
     } catch (err) {
@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({ id: user._id }, JWT_SECRET);
+        const token = jwt.sign({ id: user._id,username:user.username }, JWT_SECRET);
 
         res.json({ token, user: { id: user._id, username: user.username, email: user.email, rank: user.rank } });
     } catch (err) {
@@ -167,7 +167,6 @@ router.post('/submit', async (req, res) => {
         if (!problem) {
             return res.status(400).json({ error: 'Problem not found' });
         }
-
         const encodedSourceCode = Buffer.from(source_code).toString('base64');
         const results = [];
 

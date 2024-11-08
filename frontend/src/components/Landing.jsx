@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import { useNavigate, useParams } from 'react-router-dom';
-import { BACKEND_URL } from '../config';
+import { useNavigate } from 'react-router-dom';
+import { BACKEND_URL,extractUsername } from '../../utils';
 
 const socket = io(BACKEND_URL);
 
 export default function Landing() {
-    const { userName } = useParams();
+    const  userName = extractUsername();
     const [friends, setFriends] = useState([]);
     const [onlineStatuses, setOnlineStatuses] = useState({});
     const [loading, setLoading] = useState(true);

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import {useNavigate } from "react-router-dom"
-import { BACKEND_URL } from "../config"
+import { BACKEND_URL } from "../../utils"
 export default function Hero() {
     const [userName, setUserName] = useState('')
     const navigate=useNavigate()

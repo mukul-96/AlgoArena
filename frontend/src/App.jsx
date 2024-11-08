@@ -1,14 +1,16 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import ContestArea from './ContestArea';
-import Landing from './Landing';
-import Hero from './Hero';
+import ContestArea from './components/ContestArea';
+import Landing from './components/Landing';
+import Hero from './components/Hero';
+import Signin from './components/Signin';
 
 const App = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/:userName" element={<Landing />} />
-                <Route path="/" element={<Hero/>} />
+                <Route path="/:userName/landing" element={<Landing />} />
+                <Route path="/signin" element={<Signin />} />
+                {/* <Route path="/" element={<Hero/>} /> */}
                 <Route path="/contest/:userName/:roomID" element={<ContestArea />} />
             </Routes>
         </BrowserRouter>
