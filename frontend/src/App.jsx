@@ -3,12 +3,14 @@ import ContestArea from './components/ContestArea';
 import Landing from './components/Landing';
 import Hero from './components/Hero';
 import Signin from './components/Signin';
+import AddProblem from './components/AddProblem';
 
 const App = () => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/:userName/landing" element={<Landing />} />
+                <Route path="/addproblem" element={<AddProblem />} />
                 <Route path="/signin" element={<Signin />} />
                 {/* <Route path="/" element={<Hero/>} /> */}
                 <Route path="/contest/:userName/:roomID" element={<ContestArea />} />

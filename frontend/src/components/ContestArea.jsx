@@ -58,7 +58,7 @@ export default function ContestArea() {
         if (remainingTime <= 0) {
             alert('Time is up! Redirecting to the landing page.');
             localStorage.removeItem('contestStartTime');
-            navigate(`/${userName}`);
+            navigate(`/${userName}/landing`);
         }
     }, [remainingTime, navigate, userName]);
 
@@ -122,7 +122,7 @@ export default function ContestArea() {
         setWon(false);
         setLost(false);
         localStorage.removeItem('contestStartTime');
-        navigate(`/${userName}`);
+        navigate(`/${userName}/landing`);
     };
 
     return (
@@ -131,7 +131,7 @@ export default function ContestArea() {
             {question ? (
                 <>
                     <h2>Question: {question.title}</h2>
-                    <p>{question.description}</p>
+                    <p dangerouslySetInnerHTML={{ __html: question.description }} />
 
                     <h3>Sample Test Cases:</h3>
                     {question.testCases.slice(0, 2).map((testCase, index) => (

@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/addproblem', async (req, res) => {
     const { title, description, difficulty, testCases, tags } = req.body;
-
+    console.log(title,description,difficulty,testCases,tags)
     try {
         const existingProblem = await Problem.findOne({ title });
         if (existingProblem) {

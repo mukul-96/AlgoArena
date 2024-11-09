@@ -29,7 +29,7 @@ const problemSchema = new mongoose.Schema({
         },
     ],
     tags: [{ type: String }],
-    difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], required: true },
+    difficulty: { type: String, enum: ['easy', 'medium', 'hard'], required: true },
     createdAt: { type: Date, default: Date.now },
 });
 
