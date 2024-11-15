@@ -17,6 +17,15 @@ const userSchema = new mongoose.Schema({
     friends: [{ type: String }],
     rank: { type: String, default: 'KING' },
     createdAt: { type: Date, default: Date.now },
+    wins:{type:Number,default:0},
+    losses:{type:Number,default:0},
+    history:[
+        {
+            opponent:{type:String,required:true},
+            status:{type:String,enum:['win', 'loose', 'draw'],required:true},
+            heldOn: { type: Date},
+        }
+    ]
 });
 
 const problemSchema = new mongoose.Schema({

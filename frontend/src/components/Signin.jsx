@@ -47,7 +47,7 @@ export default function Signin() {
 
     useEffect(() => {
         if (userName) {
-          navigate(`/${userName}/landing`);
+          navigate(`/${userName}/home`);
         }
     }, [userName, navigate]);
 

@@ -246,5 +246,48 @@ router.post('/submit', async (req, res) => {
         res.status(500).json({ error: 'Submission failed', details: error.message });
     }
 });
+router.get('/leaderboard', async (req, res) => {
+    try {   
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch leaderboard' });
+    }
+});
+
+router.put('/updatehistory', async (req, res) => {
+   try {
+    const { userName, status, opponentUserName, matchType } = req.body; 
+
+    const user = await User.findOne({ username: userName });
+    if (!user) {
+        return res.status(400).json({ message: "User not found" });
+    }
+
+    user.history.push({
+        opponent: opponentUserName,
+        status: status,
+        heldOn: new Date() 
+    });
+
+    await user.save();
+
+    if (matchType === "random") {
+        if (status === "win") {
+            user.wins = parseInt(user.wins) + 1;
+        } else if (status === "loss") {
+            user.losses = parseInt(user.losses) + 1; 
+        }
+        await user.save();
+    }
+
+    res.status(200).json({ message: "History updated successfully", user });
+
+   } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update history' });
+   }});
+
 
 module.exports = router;

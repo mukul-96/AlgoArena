@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import { io } from 'socket.io-client';
 import { BACKEND_URL } from '../../utils';
+import axios from 'axios';
 
 const socket = io(BACKEND_URL);
 
@@ -14,7 +15,7 @@ export default function ContestArea() {
         java: 62,
     };
 
-    const { userName, roomID } = useParams();
+    const { userName, roomID,matchType } = useParams();
     const navigate = useNavigate();
     const [question, setQuestion] = useState(null);
     const [code, setCode] = useState('');
@@ -23,6 +24,20 @@ export default function ContestArea() {
     const [won, setWon] = useState(false);
     const [language, setLanguage] = useState('javascript');
     const contestDuration = 40;
+
+    const updateHistory=async(opponentUserName,status)=>{
+        try {
+            const res=await axios.put(`${BACKEND_URL}/user/updatehistory`,{
+                userName,
+                status,
+                opponentUserName,
+                matchType
+            })
+            console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
         const fetchQuestion = async () => {
@@ -72,8 +87,10 @@ export default function ContestArea() {
     useEffect(() => {
         socket.on('contestResult', ({ winner, loser }) => {
             if (userName === winner) {
+                updateHistory(loser,"win")
                 setWon(true);
             } else if (userName === loser) {
+                updateHistory(winner,"loose")
                 setLost(true);
             }
         });
