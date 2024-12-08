@@ -43,16 +43,16 @@ export default function LeaderBoard() {
   }, [topCoders]);
 
   return (
-    <div className="leaderboard-container">
-      <h2>Top 10 Coders</h2>
-      <ul>
+    <aside className="leaderboard">
+      <h1 className="text-white font-bold text-xl mb-10">Top 10 Coders</h1>
+      <ul className="">
         {topCoders.map((user, index) => (
-          <li key={user.id} className="leaderboard-item">
+          <li key={user.id} className="leaderboard-item text-white">
             <span>{index + 1}. {user.username}</span>
             <span> Ratio: {user.ratio.toFixed(2)}</span>
           </li>
         ))}
       </ul>
-    </div>
+    </aside>
   );
 }

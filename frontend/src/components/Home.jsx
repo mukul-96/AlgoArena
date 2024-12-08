@@ -110,16 +110,82 @@ export default function Home() {
     }
 
     return (
-        <div>
+        // <div>
+        //     <h1>Friends List</h1>
+        //     <ul>
+        //         {friends.map((friend) => (
+        //             <li key={friend}>
+        //                 {friend}
+        //                 <button
+        //                     onClick={() => handleChallenge(friend)}
+        //                     style={{
+        //                         marginLeft: '10px',
+        //                         backgroundColor: onlineStatuses[friend] ? 'green' : 'gray',
+        //                         color: 'white',
+        //                         cursor: onlineStatuses[friend] ? 'pointer' : 'not-allowed',
+        //                     }}
+        //                     disabled={!onlineStatuses[friend]}
+        //                 >
+        //                     Challenge
+        //                 </button>
+        //             </li>
+        //         ))}
+        //     </ul>
+
+        //     {!searchingForOpponent ? (
+        //         <button onClick={randomOpponentHandler}>RANDOM</button>
+        //     ) : (
+        //         <div>
+        //             <p>Searching for a random opponent...</p>
+        //             <button onClick={cancelSearchHandler}>Cancel Search</button>
+        //         </div>
+        //     )}
+
+        //     {challengeData && (
+        //         <div className="challenge-notification">
+        //             <p>{challengeData.from} has challenged you!</p>
+        //             <button onClick={() => handleResponse('accept')}>Accept</button>
+        //             <button onClick={() => handleResponse('reject')}>Reject</button>
+        //         </div>
+        //     )}
+
+        
+        //     <LeaderBoard/>
+        // </div>
+        <div className="background">
+        <div className="stars"></div>
+        <div className="twinkling"></div>
+        <div className="container">
+          {/* Header Section */}
+          <header>
+            <div className="profile">AlgoArena</div>
+            <input type="text" className="search-bar" placeholder="Search User" />
+          </header>
+  
+          {/* Main Content */}
+          <main>
+            {/* Friends List */}
+            <aside className="friends-list">
             <h1>Friends List</h1>
             <ul>
                 {friends.map((friend) => (
-                    <li key={friend}>
-                        {friend}
-                        <button
-                            onClick={() => handleChallenge(friend)}
+                    <li key={friend} className="text-white font-bold" >
+                    <button onClick={() => handleChallenge(friend)} className="w-full" style={{
+                                cursor: onlineStatuses[friend] ? 'pointer' : 'not-allowed',
+                            }}>
+                     <div className="flex items-center w-full">
+                     <p>{friend}</p>
+                    <p className="rounded-full w-3 h-3  ml-auto" style={{
+                                backgroundColor: onlineStatuses[friend] ? 'green' : 'red',
+                                color: 'white',
+                                cursor: onlineStatuses[friend] ? 'pointer' : 'not-allowed',
+                            }}></p>
+                    </div>
+                    </button>
+
+                        {/* <button
+                            
                             style={{
-                                marginLeft: '10px',
                                 backgroundColor: onlineStatuses[friend] ? 'green' : 'gray',
                                 color: 'white',
                                 cursor: onlineStatuses[friend] ? 'pointer' : 'not-allowed',
@@ -127,34 +193,39 @@ export default function Home() {
                             disabled={!onlineStatuses[friend]}
                         >
                             Challenge
-                        </button>
+                        </button> */}
                     </li>
                 ))}
             </ul>
-
+            </aside>
+  
+                {challengeData && (
+               <div className="challenge-notification">
+                     <p className='text-white'>{challengeData.from} has challenged you!</p>
+                     <button onClick={() => handleResponse('accept')}>Accept</button>
+                     <button onClick={() => handleResponse('reject')}>Reject</button>
+                 </div>
+             )}
+            {/* Find Match Section */}
             {!searchingForOpponent ? (
-                <button onClick={randomOpponentHandler}>RANDOM</button>
-            ) : (
-                <div>
-                    <p>Searching for a random opponent...</p>
-                    <button onClick={cancelSearchHandler}>Cancel Search</button>
-                </div>
-            )}
+                <div className="find-match text-white" onClick={randomOpponentHandler} >Find Match</div>
 
-            {challengeData && (
-                <div className="challenge-notification">
-                    <p>{challengeData.from} has challenged you!</p>
-                    <button onClick={() => handleResponse('accept')}>Accept</button>
-                    <button onClick={() => handleResponse('reject')}>Reject</button>
-                </div>
+             ) : (
+                 <div>
+                     <p className='text-white'>Searching for a random opponent...</p>
+                     <button onClick={cancelSearchHandler} className="text-white">Cancel Search</button>
+                 </div>
+             )}
+                  {redirecting && (
+                 <div className="redirecting-text">
+                     <p>Redirecting to contest area in a moment...</p>
+                 </div>
             )}
-
-            {redirecting && (
-                <div className="redirecting-text">
-                    <p>Redirecting to contest area in a moment...</p>
-                </div>
-            )}
+  
+            {/* Leaderboard */}
             <LeaderBoard/>
+          </main>
         </div>
+      </div>
     );
 }
