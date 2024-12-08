@@ -3,12 +3,16 @@ import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import { BACKEND_URL, extractUsername } from '../../utils';
 import LeaderBoard from './LeaderBoard';
+import RandomLoader from './RandomLoader';
+import axios from 'axios';
 
 const socket = io(BACKEND_URL);
 
 export default function Home() {
     const userName = extractUsername();
+    console.log("userName",userName);
     const [friends, setFriends] = useState([]);
+    const [friendUserName,setfriendUserName]=useState("");
     const [onlineStatuses, setOnlineStatuses] = useState({});
     const [loading, setLoading] = useState(true);
     const [challengeData, setChallengeData] = useState(null);
@@ -16,6 +20,7 @@ export default function Home() {
     const [matchType, setMatchType] = useState('');
     const [redirecting, setRedirecting] = useState(false);
     const [roomID, setRoomID] = useState(null);
+    const [addFriend,setAddfriend]=useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -67,7 +72,11 @@ export default function Home() {
             socket.off('opponentFound');
         };
     }, [userName]);
-
+    useEffect(()=>{
+        setTimeout(()=>{
+            setChallengeData(null);
+        },5000)
+    },[challengeData])
     useEffect(() => {
         if (roomID && matchType) {
             console.log('Navigating to:', matchType);
@@ -79,12 +88,10 @@ export default function Home() {
             }, 1000);
         }
     }, [matchType, roomID, navigate]);
-
     const handleChallenge = (friendUserName) => {
         setMatchType('challenged');
         socket.emit('challengeFriend', { from: userName, to: friendUserName });
     };
-
     const handleResponse = (response) => {
         socket.emit('respondToChallenge', {
             from: challengeData.from,
@@ -108,63 +115,62 @@ export default function Home() {
     if (loading) {
         return <div>Loading friends...</div>;
     }
+const serchFriendHandler=(e)=>
+{
+    setfriendUserName(e.target.value);
+}
+const search = async () => {
+    try {
+        const res = await axios.post(`${BACKEND_URL}/user/searchFriend`, {
+            friendUserName: friendUserName,
+        });
+
+        if ( res.data.user) {
+            setAddfriend(true); 
+        } else {
+            setAddfriend(false);
+            alert("no user found")
+        }
+    } catch (error) {
+        console.error("Error searching for friend:", error); 
+        setAddfriend(false); 
+    }
+};
+const addFriendHandler=async()=>
+{
+    try {
+        const requestData = { friendUserName };
+        const response = await axios.post(`${BACKEND_URL}/user/addFriend/${userName}`,requestData);
+        console.log('Friend added successfully:', response.data);
+    } catch (error) {
+        if (error.response) {
+            console.error('Failed to add friend:', error.response.data.error);
+            throw new Error(error.response.data.error);
+        } else if (error.request) {
+            console.error('No response received:', error.request);
+            throw new Error('No response from server');
+        } else {
+            console.error('Error:', error.message);
+            throw new Error(error.message);
+        }
+    }
+}
 
     return (
-        // <div>
-        //     <h1>Friends List</h1>
-        //     <ul>
-        //         {friends.map((friend) => (
-        //             <li key={friend}>
-        //                 {friend}
-        //                 <button
-        //                     onClick={() => handleChallenge(friend)}
-        //                     style={{
-        //                         marginLeft: '10px',
-        //                         backgroundColor: onlineStatuses[friend] ? 'green' : 'gray',
-        //                         color: 'white',
-        //                         cursor: onlineStatuses[friend] ? 'pointer' : 'not-allowed',
-        //                     }}
-        //                     disabled={!onlineStatuses[friend]}
-        //                 >
-        //                     Challenge
-        //                 </button>
-        //             </li>
-        //         ))}
-        //     </ul>
-
-        //     {!searchingForOpponent ? (
-        //         <button onClick={randomOpponentHandler}>RANDOM</button>
-        //     ) : (
-        //         <div>
-        //             <p>Searching for a random opponent...</p>
-        //             <button onClick={cancelSearchHandler}>Cancel Search</button>
-        //         </div>
-        //     )}
-
-        //     {challengeData && (
-        //         <div className="challenge-notification">
-        //             <p>{challengeData.from} has challenged you!</p>
-        //             <button onClick={() => handleResponse('accept')}>Accept</button>
-        //             <button onClick={() => handleResponse('reject')}>Reject</button>
-        //         </div>
-        //     )}
-
-        
-        //     <LeaderBoard/>
-        // </div>
+    
         <div className="background">
         <div className="stars"></div>
         <div className="twinkling"></div>
         <div className="container">
-          {/* Header Section */}
           <header>
             <div className="profile">AlgoArena</div>
-            <input type="text" className="search-bar" placeholder="Search User" />
+            <button className='text-white ' onClick={search}>search</button>
+            <input type="text" className="search-bar" placeholder="Search User"  onChange={serchFriendHandler} onClick={()=>{
+                setAddfriend(null)
+            }}/>
+
           </header>
-  
-          {/* Main Content */}
-          <main>
-            {/* Friends List */}
+            <main>
             <aside className="friends-list">
             <h1>Friends List</h1>
             <ul>
@@ -182,38 +188,39 @@ export default function Home() {
                             }}></p>
                     </div>
                     </button>
-
-                        {/* <button
-                            
-                            style={{
-                                backgroundColor: onlineStatuses[friend] ? 'green' : 'gray',
-                                color: 'white',
-                                cursor: onlineStatuses[friend] ? 'pointer' : 'not-allowed',
-                            }}
-                            disabled={!onlineStatuses[friend]}
-                        >
-                            Challenge
-                        </button> */}
                     </li>
                 ))}
             </ul>
             </aside>
+            {addFriend && (
+               <div className="challenge-notification mt-5">
+                     <span className='mb-4 text-xl font-semibold text-cyan-100 flex justify-center '>{friendUserName}</span>
+                    <div className='flex items-center justify-evenly '>
+                    <button  onClick={addFriendHandler} className='text-green-500 font-semibold m-2'>ADD</button>
+                    <button onClick={()=>{}} className='text-yellow-500 font-semibold m-2'>PROFILE</button>
+                     <button onClick={() => setAddfriend(null)} className='text-red-500 font-semibold m-2'> CLOSE</button>
+
+                    </div>
+                 </div>
+             )}
   
                 {challengeData && (
                <div className="challenge-notification">
-                     <p className='text-white'>{challengeData.from} has challenged you!</p>
-                     <button onClick={() => handleResponse('accept')}>Accept</button>
-                     <button onClick={() => handleResponse('reject')}>Reject</button>
+                     <p className='mb-4 text-white'><span className='text-lg font-semibold text-orange-100'>{challengeData.from}</span> dares you to accept their challenge!</p>
+                    <div className='flex items-center justify-between'>
+                    <button onClick={() => handleResponse('accept')} className='text-green-500 font-semibold '>ACCEPT</button>
+                     <button onClick={() => handleResponse('reject')} className='text-red-500 font-semibold '> REJECT</button>
+
+                    </div>
                  </div>
              )}
-            {/* Find Match Section */}
             {!searchingForOpponent ? (
                 <div className="find-match text-white" onClick={randomOpponentHandler} >Find Match</div>
 
              ) : (
-                 <div>
-                     <p className='text-white'>Searching for a random opponent...</p>
-                     <button onClick={cancelSearchHandler} className="text-white">Cancel Search</button>
+                 <div className='flex items-center flex-col'>
+                     <div ><RandomLoader/></div>
+                     <button onClick={cancelSearchHandler} className=" mt-4 font-semibold text-lg text-cyan-100  px-2 py-2">Cancel Search</button>
                  </div>
              )}
                   {redirecting && (
@@ -221,9 +228,7 @@ export default function Home() {
                      <p>Redirecting to contest area in a moment...</p>
                  </div>
             )}
-  
-            {/* Leaderboard */}
-            <LeaderBoard/>
+              <LeaderBoard/>
           </main>
         </div>
       </div>

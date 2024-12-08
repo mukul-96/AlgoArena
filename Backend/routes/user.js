@@ -90,14 +90,15 @@ router.post('/addproblem', async (req, res) => {
     }
 });
 
-router.post('/search-friend', async (req, res) => {
-    const { friendUsername } = req.body;
-
+router.post('/searchFriend', async (req, res) => {
+    const  {friendUserName}  = req.body;
+    console.log(friendUserName)
     try {
-        const user = await User.findOne({ username: friendUsername });
+        const user = await User.findOne({ username: friendUserName });
 
         if (!user) {
-            return res.status(404).json({ error: 'No friend found' });
+            return res.status(200
+            ).json({ error: 'No friend found' });
         }
 
         res.status(200).json({ message: 'Friend found', user: { user } });
@@ -124,7 +125,7 @@ router.get('/friends-list/:userName', async (req, res) => {
     }
 });
 
-router.post('/add-friend/:userName', async (req, res) => {
+router.post('/addFriend/:userName', async (req, res) => {
     const { friendUserName } = req.body;
     const { userName: userName } = req.params;
 

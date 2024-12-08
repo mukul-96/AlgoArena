@@ -45,10 +45,14 @@ export default function Signin() {
         }
     };
 
+    useEffect(()=>{
+      localStorage.removeItem('authorization')
+    },[])
     useEffect(() => {
         if (userName) {
           navigate(`/${userName}/home`);
         }
+        
     }, [userName, navigate]);
 
     const submitSigninHandler = async () => {

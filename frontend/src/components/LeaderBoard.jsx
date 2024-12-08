@@ -40,11 +40,11 @@ export default function LeaderBoard() {
     };
 
     fetchUsers();
-  }, [topCoders]);
+  }, []);
 
   return (
     <aside className="leaderboard">
-      <h1 className="text-white font-bold text-xl mb-10">Top 10 Coders</h1>
+      <h1 className="text-white font-bold text-xl mb-10">Top Warriors</h1>
       <ul className="">
         {topCoders.map((user, index) => (
           <li key={user.id} className="leaderboard-item text-white">
