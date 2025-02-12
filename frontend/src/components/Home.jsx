@@ -10,7 +10,6 @@ const socket = io(BACKEND_URL);
 
 export default function Home() {
     const userName = extractUsername();
-    console.log("userName",userName);
     const [friends, setFriends] = useState([]);
     const [friendUserName,setfriendUserName]=useState("");
     const [onlineStatuses, setOnlineStatuses] = useState({});
@@ -162,9 +161,10 @@ const addFriendHandler=async()=>
         <div className="stars"></div>
         <div className="twinkling"></div>
         <div className="container">
+        <p className='flex justify-center m-3'><button className='text-white text-xl p-3 rounded-full border-2 border-cyan-100 flex justify-center items-center' onClick={search}>search</button></p>
+
           <header>
-            <div className="profile">AlgoArena</div>
-            <button className='text-white ' onClick={search}>search</button>
+            <div className="profile" onClick={()=>{navigate(`/${userName}/profile`)}}>AlgoArena</div>
             <input type="text" className="search-bar" placeholder="Search User"  onChange={serchFriendHandler} onClick={()=>{
                 setAddfriend(null)
             }}/>

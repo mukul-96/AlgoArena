@@ -4,12 +4,14 @@ import Home from './components/Home';
 import Signin from './components/Signin';
 import AddProblem from './components/AddProblem';
 import Landing from './components/Landing';
+import Profile from './components/Profile';
 
 const App = () => {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/:userName/home" element={<Home />} />
+                <Route path="/:userName/profile" element={<Profile />} />
                 <Route path="/" element={<Landing />} />
                 <Route path="/addproblem" element={<AddProblem />} />
                 <Route path="/signin" element={<Signin />} />

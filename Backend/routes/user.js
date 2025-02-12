@@ -61,7 +61,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/addproblem', async (req, res) => {
-    const { title, description, difficulty, testCases, tags } = req.body;
+    const { title, description, difficulty, testCases, tags ,inputFormat,outputFormat} = req.body;
     console.log(title,description,difficulty,testCases,tags)
     try {
         const existingProblem = await Problem.findOne({ title });
@@ -78,6 +78,8 @@ router.post('/addproblem', async (req, res) => {
             description,
             difficulty,
             testCases,
+            inputFormat,
+            outputFormat,
             tags,
         });
 
@@ -261,7 +263,7 @@ router.put('/updatehistory', async (req, res) => {
    try {
     const { userName, status, opponentUserName, matchType } = req.body; 
 
-    const user = await User.findOne({ username: userName });
+    let user = await User.findOne({ username: userName });
     if (!user) {
         return res.status(400).json({ message: "User not found" });
     }
@@ -272,16 +274,16 @@ router.put('/updatehistory', async (req, res) => {
         heldOn: new Date() 
     });
 
-    await user.save();
 
     if (matchType === "random") {
         if (status === "win") {
             user.wins = parseInt(user.wins) + 1;
-        } else if (status === "loss") {
+        } else if (status === "loose") {
             user.losses = parseInt(user.losses) + 1; 
         }
         await user.save();
     }
+     
 
     res.status(200).json({ message: "History updated successfully", user });
 
@@ -289,6 +291,28 @@ router.put('/updatehistory', async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Failed to update history' });
    }});
+
+   router.get('/profile', async (req, res) => {  
+    try {
+        const { username } = req.query;
+
+        if (!username) {
+            return res.status(400).json({ success: false, message: "Username is required" });
+        }
+
+        const user = await User.findOne({ username });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        res.status(200).json( user);
+
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
 
 
 module.exports = router;

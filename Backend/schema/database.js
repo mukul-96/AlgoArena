@@ -37,8 +37,10 @@ const problemSchema = new mongoose.Schema({
             expectedOutput: { type: String, required: true }, 
         },
     ],
+    inputFormat:{type:String},
+    outputFormat:{type:String},
     tags: [{ type: String }],
-    difficulty: { type: String, enum: ['easy', 'medium', 'hard'], required: true },
+    difficulty: { type: String, enum: ['easy', 'medium', 'hard','Easy','Medium','Hard'], required: true },
     createdAt: { type: Date, default: Date.now },
 });
 
