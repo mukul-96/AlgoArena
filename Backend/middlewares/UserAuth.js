@@ -2,9 +2,10 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const userAuth = (req, res, next) => {
-    const auth = req.headers.authorization;
+const auth = req.headers.authorization;
+    console.log(auth)
 
-    if (!auth || !auth.startsWith("Bearer ")) {
+    if (!auth || !auth.startsWith("bearer ")) {
         return res.status(401).json({
             msg: "Authorization header is missing or malformed."
         });

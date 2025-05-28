@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require('bcryptjs');
 const { User, Problem } = require("../schema/database");
+const { adminAuth } = require("../middlewares/adminAuth");
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 require('dotenv').config(); 
@@ -38,29 +39,64 @@ router.post('/register', async (req, res) => {
     }
 });
 
+// router.post('/login', async (req, res) => {
+//     const { email, password } = req.body;
+
+//     try {
+//         const user = await User.findOne({ email });
+//         if (!user) {
+//             return res.status(400).json({ message: 'User does not exist' });
+//         }
+
+//         const isMatch = await bcrypt.compare(password, user.password);
+//         if (!isMatch) {
+//             return res.status(400).json({ message: 'Invalid credentials' });
+//         }
+
+//         const token = jwt.sign({ id: user._id,username:user.username }, JWT_SECRET);
+
+//         res.json({ token, user: { id: user._id, username: user.username, email: user.email, rank: user.rank } });
+//     } catch (err) {
+//         res.status(500).json({ message: 'Server Error' });
+//     }
+// });
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ message: 'User does not exist' });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
-        }
-
-        const token = jwt.sign({ id: user._id,username:user.username }, JWT_SECRET);
-
-        res.json({ token, user: { id: user._id, username: user.username, email: user.email, rank: user.rank } });
-    } catch (err) {
-        res.status(500).json({ message: 'Server Error' });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'User does not exist' });
     }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+    const isAdmin = (email === "admin@gmail.com");
+
+    const token = jwt.sign(
+      { id: user._id, username: user.username, isAdmin },
+      JWT_SECRET
+    );
+
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        rank: user.rank,
+        isAdmin, 
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
 
-router.post('/addproblem', async (req, res) => {
+
+router.post('/addproblem',adminAuth, async (req, res) => {
     const { title, description, difficulty, testCases, tags ,inputFormat,outputFormat} = req.body;
     console.log(title,description,difficulty,testCases,tags)
     try {

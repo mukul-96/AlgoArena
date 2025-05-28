@@ -30,23 +30,48 @@ export default function AddProblem() {
   const difficultyHandler = (value) => setDifficulty(value);
   const inputFormatHandler = (value) => setInputFormat(value);
   const outputFormatHandler = (value) => setOutputFormat(value);
+  // const submitHandler = async () => {
+  //        try {
+  //          const res = await axios.post(`${BACKEND_URL}/user/addproblem`, {
+  //           title,
+  //            description,
+  //            difficulty,
+  //          testCases: testCases,
+  //            tags,
+  //            inputFormat,
+  //            outputFormat
+  //          });
+  //          console.log(res.data);
+  //        } catch (error) {
+  //          console.log(error);
+  //        }
+  //      };
   const submitHandler = async () => {
-         try {
-           const res = await axios.post(`${BACKEND_URL}/user/addproblem`, {
-            title,
-             description,
-             difficulty,
-           testCases: testCases,
-             tags,
-             inputFormat,
-             outputFormat
-           });
-           console.log(res.data);
-         } catch (error) {
-           console.log(error);
-         }
-       };
-  
+  try {
+    const token = localStorage.getItem("authorization"); 
+    const res = await axios.post(
+      `${BACKEND_URL}/user/addproblem`,
+      {
+        title,
+        description,
+        difficulty,
+        testCases,
+        tags,
+        inputFormat,
+        outputFormat
+      },
+      {
+        headers: {
+          Authorization: `${token}`
+        }
+      }
+    );
+    console.log(res.data);
+  } catch (error) {
+    console.log(error.response?.data || error.message);
+  }
+};
+
 
   return (
     <div className="p-6" id="el-986vn1ao">
