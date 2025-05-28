@@ -193,8 +193,8 @@ const addFriendHandler=async()=>
             </ul>
             </aside>
             {addFriend && (
-               <div className="challenge-notification mt-5">
-                     <span className='mb-4 text-xl font-semibold text-cyan-100 flex justify-center '>{friendUserName}</span>
+               <div className="challenge-notification mt-5 bg-black">
+                     <span className='mb-4  text-xl font-semibold text-cyan-100 flex justify-center '>{friendUserName}</span>
                     <div className='flex items-center justify-evenly '>
                     <button  onClick={addFriendHandler} className='text-green-500 font-semibold m-2'>ADD</button>
                     <button onClick={()=>{}} className='text-yellow-500 font-semibold m-2'>PROFILE</button>
@@ -205,7 +205,7 @@ const addFriendHandler=async()=>
              )}
   
                 {challengeData && (
-               <div className="challenge-notification">
+               <div className="challenge-notification bg-black mt-16">
                      <p className='mb-4 text-white'><span className='text-lg font-semibold text-orange-100'>{challengeData.from}</span> dares you to accept their challenge!</p>
                     <div className='flex items-center justify-between'>
                     <button onClick={() => handleResponse('accept')} className='text-green-500 font-semibold '>ACCEPT</button>

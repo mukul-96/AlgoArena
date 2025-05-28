@@ -59,11 +59,13 @@ const socketHandler = (io) => {
 
         socket.on('leaveRoom', ({ roomID, userName }) => {
             socket.leave(roomID);
+            localStorage.removeItem('contestStartTime');
             delete onlineUsers[userName];
             socket.to(roomID).emit('userLeft', { userName });
         });
 
         socket.on('contestResult', ({ roomID, winner }) => {
+            localStorage.removeItem('contestStartTime');
             const roomParts = roomID.split('_');
             const participant1 = roomParts[1];
             const participant2 = roomParts[2];

@@ -52,7 +52,7 @@ export default function ContestArea() {
             }
         };
         fetchQuestion();
-
+        
         const storedStartTime = localStorage.getItem('contestStartTime');
         if (storedStartTime) {
             const currentTime = Date.now();
